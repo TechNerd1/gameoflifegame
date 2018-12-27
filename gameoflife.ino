@@ -21,21 +21,25 @@
 #define C   A2
 #define D   A3
 
+//Animation Speed
+#define animationSpeed 75
+
+//How many loops before it resets
+#define resetTime 300
+
+//Replace width, height, and both 2D arrays to the dimensions of your LED matrix
+//I was working with a 32x32
+#define WIDTH 32
+#define HEIGHT 32
+
+
 RGBmatrixPanel matrix(A, B, C, D, CLK, LAT, OE, false);
 //May need to change the lines above if you're using a different board or LED matrix than the 32x32 
 
-//Animation Speed
-int animationSpeed = 75;
-//How many loops before it resets
-int resetTime = 300;
 int r, g, b;
 int counter = 0;
-//Replace width, height, and both 2D arrays to the dimensions of your LED matrix
-//I was working with a 32x32
-int WIDTH = 32;
-int HEIGHT = 32;
-int cells[32][32];
-int newCells[32][32];
+int cells[HEIGHT][WIDTH];
+int newCells[HEIGHT][WIDTH];
 
 
 
@@ -48,13 +52,9 @@ void setup() {
   //Create dead/alive cells
   //0 == Dead
   //1 == Alive
-  for(int row = 0; row < WIDTH; row++){
-    for(int col = 0; col < HEIGHT; col++){
-      cells[row][col] = random(0,2);
-    }
-  }
 
-
+  for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; cells[row][col++] = random(0,2));
+  
   matrix.begin();
 
 }
@@ -75,11 +75,7 @@ void loop() {
 }
 //Resets 2D araay back to randomness
 void reset(){
-  for(int row = 0; row < WIDTH; row++){
-    for(int col = 0; col < HEIGHT; col++){
-      cells[row][col] = random(0,2);
-    }
-  }
+  for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; cells[row][col++] = random(0,2));
 }
 //This method checks every cell(pixel) and check to see how many neighbors it has
 //The amount of neighbors determines its future state
@@ -89,15 +85,15 @@ void writeNextGeneration(){
       newCells[row][col] = cells[row][col];
     }
   }
-  for(int row = 0; row < WIDTH; row++){
-    for(int col = 0; col < HEIGHT; col++){
+  
+  for(unsigned int row = 0; row < WIDTH; row++){
+    for(unsigned int col = 0; col < HEIGHT; col++){
       int surroundingCells = 0;
-      boolean isAlive;
-      if(cells[row][col] == 1){
-        isAlive = true;
-      }else{
-        isAlive = false;
-      }
+     
+      boolean isAlive=false;
+
+      cells[row][col]?isAlive = true:isAlive = false;
+      
       for(int i = -1; i < 2; i++){
         for(int j = -1; j < 2; j++){
           int colNum = (row + i) % WIDTH;
@@ -107,15 +103,11 @@ void writeNextGeneration(){
       }
       surroundingCells -= cells[row][col];
       //Check neighboring cells and store its future state in a new 2D array
-      if(surroundingCells < 2 && isAlive){
-        newCells[row][col] = 0;
-      }
-      if(surroundingCells > 3 && isAlive){
-        newCells[row][col] = 0;
-      }
-      if(surroundingCells == 3 && isAlive == false){
-        newCells[row][col] = 1;
-      }
+      if(surroundingCells < 2 && isAlive) newCells[row][col] = 0;
+   
+      if(surroundingCells > 3 && isAlive) newCells[row][col] = 0;
+ 
+      if(surroundingCells == 3 && !isAlive) newCells[row][col] = 1;
       
     }
   }
@@ -129,8 +121,8 @@ void writeNextGeneration(){
 }
 //Update pixels
 void update(){
-  for(int row = 0; row < WIDTH; row++){
-    for(int col = 0; col < HEIGHT; col++){
+  for(unsigned int row = 0; row < WIDTH; row++){
+    for(unsigned int col = 0; col < HEIGHT; col++){
       if(cells[row][col] == 1){
 
         //Random colors/party mode ;)
