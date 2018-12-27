@@ -20,7 +20,7 @@
 #define B   A1
 #define C   A2
 #define D   A3
-#define crNum(x,y,z) (x+y)%z
+#define crNum(x,y,z) ((x+y)%z)
 //Animation Speed
 #define animationSpeed 75
 
@@ -93,24 +93,18 @@ void writeNextGeneration(){
 
       cells[row][col]?isAlive = true:isAlive = false;
       
-      for(int i = -1; i < 2; i++) for(int j = -1; j < 2; j++) surroundingCells += cells[crNum(row,i,WIDTH][crNum(col,i,HEIGHT];
+      for(int i = -1; i < 2; i++) for(int j = -1; j < 2; j++) surroundingCells += cells[crNum(row,i,WIDTH][crNum(col,j,HEIGHT];
       
       surroundingCells -= cells[row][col];
       //Check neighboring cells and store its future state in a new 2D array
-      if(surroundingCells < 2 && isAlive) newCells[row][col] = 0;
-   
-      if(surroundingCells > 3 && isAlive) newCells[row][col] = 0;
+      if((surroundingCells < 2 || surroundingCells > 3) && isAlive) newCells[row][col] = 0;
  
       if(surroundingCells == 3 && !isAlive) newCells[row][col] = 1;
       
     }
   }
   //copy new 2d Array to old
-  for(int row = 0; row < WIDTH; row++){
-    for(int col = 0; col < HEIGHT; col++){
-      cells[row][col] = newCells[row][col];
-    }
-  }
+  for(int row = 0; row < WIDTH; row++) for(int col = 0; col < HEIGHT; col++) cells[row][col] = newCells[row][col];
   
 }
 //Update pixels
