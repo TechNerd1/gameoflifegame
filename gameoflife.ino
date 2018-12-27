@@ -20,7 +20,7 @@
 #define B   A1
 #define C   A2
 #define D   A3
-
+#define crNum(x,y,z) (x+y)%z
 //Animation Speed
 #define animationSpeed 75
 
@@ -62,10 +62,8 @@ void setup() {
 void loop() {
   
   counter++;
-  if(counter == resetTime){
-    reset();
-    counter = 0;
-  }
+  
+  if(counter == resetTime) reset();
   
   update();
   delay(animationSpeed);
@@ -76,6 +74,7 @@ void loop() {
 //Resets 2D araay back to randomness
 void reset(){
   for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; cells[row][col++] = random(0,2));
+  counter=0;
 }
 //This method checks every cell(pixel) and check to see how many neighbors it has
 //The amount of neighbors determines its future state
@@ -94,13 +93,8 @@ void writeNextGeneration(){
 
       cells[row][col]?isAlive = true:isAlive = false;
       
-      for(int i = -1; i < 2; i++){
-        for(int j = -1; j < 2; j++){
-          int colNum = (row + i) % WIDTH;
-          int rowNum = (col + j) % HEIGHT;
-          surroundingCells += cells[colNum][rowNum];
-        }
-      }
+      for(int i = -1; i < 2; i++) for(int j = -1; j < 2; j++) surroundingCells += cells[crNum(row,i,WIDTH][crNum(col,i,HEIGHT];
+      
       surroundingCells -= cells[row][col];
       //Check neighboring cells and store its future state in a new 2D array
       if(surroundingCells < 2 && isAlive) newCells[row][col] = 0;
