@@ -80,7 +80,11 @@ void reset(){
 //This method checks every cell(pixel) and check to see how many neighbors it has
 //The amount of neighbors determines its future state
 void writeNextGeneration(){
-  for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; newCells[row][col++] = cells[row][col++]);
+  for(int row = 0; row < WIDTH; row++){
+    for(int col = 0; col < HEIGHT; col++){
+      newCells[row][col] = cells[row][col];
+    }
+  }
   
   for(unsigned int row = 0; row < WIDTH; row++){
     for(unsigned int col = 0; col < HEIGHT; col++){
@@ -108,7 +112,11 @@ void writeNextGeneration(){
     }
   }
   //copy new 2d Array to old
-  for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; cells[row][col++] = newCells[row][col++]);
+  for(int row = 0; row < WIDTH; row++){
+    for(int col = 0; col < HEIGHT; col++){
+      cells[row][col] = newCells[row][col];
+    }
+  }
   
 }
 //Update pixels
