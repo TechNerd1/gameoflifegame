@@ -115,18 +115,12 @@ void writeNextGeneration(){
 }
 //Update pixels
 void update(){
-  for(unsigned int row = 0; row < WIDTH; row++){
-    for(unsigned int col = 0; col < HEIGHT; col++){
-      if(cells[row][col] == 1){
+  for(unsigned int row = 0; row < WIDTH; row++)
+    for(unsigned int col = 0; col < HEIGHT; col++) 
+      cells[row][col]?matrix.drawPixel(row, col, matrix.Color333(r, g,b)): matrix.drawPixel(row, col, matrix.Color333(0,0,0));
 
         //Random colors/party mode ;)
         //matrix.drawPixel(row, col, matrix.Color333(random(7), random(7),random(7)));
         //If you uncomment the above line, make sure to comment the line below
-        matrix.drawPixel(row, col, matrix.Color333(r, g,b));
-      }
-      else
-        matrix.drawPixel(row, col, matrix.Color333(0,0,0));
-    }
-  }
 }
 
