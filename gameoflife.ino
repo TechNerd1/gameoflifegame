@@ -38,8 +38,8 @@ RGBmatrixPanel matrix(A, B, C, D, CLK, LAT, OE, false);
 
 int r, g, b;
 int counter = 0;
-int cells[HEIGHT][WIDTH];
-int newCells[HEIGHT][WIDTH];
+char cells[HEIGHT][WIDTH];
+char newCells[HEIGHT][WIDTH];
 int sum1 = 0;
 
 
@@ -62,17 +62,11 @@ void setup() {
 void loop() {
   
   counter++;
-
   
+  if(counter == resetTime ) sum1 = checkSum();
   
-
-  if(counter == resetTime ){
-    sum1 = checkSum();
-    
-  }
   if(counter == resetTime + 1){
-    if(checkSum() == sum1)
-      reset();
+    if(checkSum() == sum1) reset();
     counter = 0;
     sum1 = 0;
   }
@@ -98,12 +92,8 @@ void reset(){
 //This method checks every cell(pixel) and check to see how many neighbors it has
 //The amount of neighbors determines its future state
 void writeNextGeneration(){
-  for(int row = 0; row < WIDTH; row++){
-    for(int col = 0; col < HEIGHT; col++){
-      newCells[row][col] = cells[row][col];
-    }
-  }
-  
+  for(int row = 0; row < WIDTH; row++) for(int col = 0; col < HEIGHT; newCells[row][col] = cells[row][col++]) ;
+    
   for(unsigned int row = 0; row < WIDTH; row++){
     for(unsigned int col = 0; col < HEIGHT; col++){
       int surroundingCells = 0;
