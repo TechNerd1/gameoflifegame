@@ -25,7 +25,7 @@
 #define animationSpeed 75
 
 //How many loops before it resets
-#define resetTime 300
+#define resetTime 100
 
 //Replace width, height, and both 2D arrays to the dimensions of your LED matrix
 //I was working with a 32x32
@@ -40,7 +40,7 @@ int r, g, b;
 int counter = 0;
 int cells[HEIGHT][WIDTH];
 int newCells[HEIGHT][WIDTH];
-
+int sum1 = 0;
 
 
 void setup() {
@@ -62,14 +62,33 @@ void setup() {
 void loop() {
   
   counter++;
+
   
-  if(counter == resetTime) reset();
+  
+
+  if(counter == resetTime ){
+    sum1 = checkSum();
+    
+  }
+  if(counter == resetTime + 1){
+    if(checkSum() == sum1)
+      reset();
+    counter = 0;
+    sum1 = 0;
+  }
+
+  
   
   update();
   delay(animationSpeed);
   writeNextGeneration();
   
 
+}
+int checkSum(){
+  int sum = 0;
+  for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; cells[row][col++]) sum += cells[row][col];
+  return sum;
 }
 //Resets 2D araay back to randomness
 void reset(){
@@ -116,4 +135,3 @@ void update(){
         //matrix.drawPixel(row, col, matrix.Color333(random(7), random(7),random(7)));
         //If you uncomment the above line, make sure to comment the line below
 }
-
