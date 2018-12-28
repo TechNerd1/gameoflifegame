@@ -93,7 +93,7 @@ void writeNextGeneration(){
 
       cells[row][col]?isAlive = true:isAlive = false;
       
-      for(int i = -1; i < 2; i++) for(int j = -1; j < 2; j++) surroundingCells += cells[crNum(row,i,WIDTH)][crNum(col,j,HEIGHT)];
+      for(int i = -1; i < 2; i++) for(int j = -1; j < 2; surroundingCells += cells[crNum(row,i,WIDTH)][crNum(col,j++,HEIGHT)]); 
       
       surroundingCells -= cells[row][col];
       //Check neighboring cells and store its future state in a new 2D array
@@ -109,9 +109,8 @@ void writeNextGeneration(){
 }
 //Update pixels
 void update(){
-  for(unsigned int row = 0; row < WIDTH; row++)
-    for(unsigned int col = 0; col < HEIGHT; col++) 
-      cells[row][col]?matrix.drawPixel(row, col, matrix.Color333(r, g,b)): matrix.drawPixel(row, col, matrix.Color333(0,0,0));
+  for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; col++) 
+      cells[row][col]?matrix.drawPixel(row, col, matrix.Color333(r,g,b)): matrix.drawPixel(row, col, matrix.Color333(0,0,0));
 
         //Random colors/party mode ;)
         //matrix.drawPixel(row, col, matrix.Color333(random(7), random(7),random(7)));
