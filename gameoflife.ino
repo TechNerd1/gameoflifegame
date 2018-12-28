@@ -38,9 +38,10 @@ RGBmatrixPanel matrix(A, B, C, D, CLK, LAT, OE, false);
 
 int r, g, b;
 int counter = 0;
-char cells[HEIGHT][WIDTH];
-char newCells[HEIGHT][WIDTH];
+int cells[HEIGHT][WIDTH];
+int newCells[HEIGHT][WIDTH];
 int sum1 = 0;
+
 
 
 void setup() {
@@ -63,15 +64,16 @@ void loop() {
   
   counter++;
   
-  if(counter == resetTime ) sum1 = checkSum();
-  
+  if(counter == resetTime ){
+    sum1 = checkSum();
+    
+  }
   if(counter == resetTime + 1){
-    if(checkSum() == sum1) reset();
+    if(checkSum() == sum1)
+      reset();
     counter = 0;
     sum1 = 0;
-  }
-
-  
+}
   
   update();
   delay(animationSpeed);
@@ -92,8 +94,12 @@ void reset(){
 //This method checks every cell(pixel) and check to see how many neighbors it has
 //The amount of neighbors determines its future state
 void writeNextGeneration(){
-  for(int row = 0; row < WIDTH; row++) for(int col = 0; col < HEIGHT; newCells[row][col] = cells[row][col++]) ;
-    
+  for(int row = 0; row < WIDTH; row++){
+    for(int col = 0; col < HEIGHT; col++){
+      newCells[row][col] = cells[row][col];
+    }
+  }
+  
   for(unsigned int row = 0; row < WIDTH; row++){
     for(unsigned int col = 0; col < HEIGHT; col++){
       int surroundingCells = 0;
@@ -102,7 +108,7 @@ void writeNextGeneration(){
 
       cells[row][col]?isAlive = true:isAlive = false;
       
-      for(int i = -1; i < 2; i++) for(int j = -1; j < 2; surroundingCells += cells[crNum(row,i,WIDTH)][crNum(col,j++,HEIGHT)]); 
+      for(int i = -1; i < 2; i++) for(int j = -1; j < 2; j++) surroundingCells += cells[crNum(row,i,WIDTH)][crNum(col,j,HEIGHT)];
       
       surroundingCells -= cells[row][col];
       //Check neighboring cells and store its future state in a new 2D array
@@ -113,13 +119,14 @@ void writeNextGeneration(){
     }
   }
   //copy new 2d Array to old
-  for(int row = 0; row < WIDTH; row++) for(int col = 0; col < HEIGHT;cells[row][col] = newCells[row][col++]);
+  for(int row = 0; row < WIDTH; row++) for(int col = 0; col < HEIGHT; col++) cells[row][col] = newCells[row][col];
   
 }
 //Update pixels
 void update(){
-  for(unsigned int row = 0; row < WIDTH; row++) for(unsigned int col = 0; col < HEIGHT; col++) 
-      cells[row][col]?matrix.drawPixel(row, col, matrix.Color333(r,g,b)): matrix.drawPixel(row, col, matrix.Color333(0,0,0));
+  for(unsigned int row = 0; row < WIDTH; row++)
+    for(unsigned int col = 0; col < HEIGHT; col++) 
+      cells[row][col]?matrix.drawPixel(row, col, matrix.Color333(r, g,b)): matrix.drawPixel(row, col, matrix.Color333(0,0,0));
 
         //Random colors/party mode ;)
         //matrix.drawPixel(row, col, matrix.Color333(random(7), random(7),random(7)));
