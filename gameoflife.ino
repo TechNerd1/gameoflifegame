@@ -24,7 +24,7 @@
 //Animation Speed
 #define animationSpeed 75
 
-//How many loops before it resets
+//How many loops before it checks if dead
 #define resetTime 100
 
 //Replace width, height, and both 2D arrays to the dimensions of your LED matrix
@@ -64,16 +64,23 @@ void loop() {
   
   counter++;
   
-  if(counter == resetTime ){
+  if(counter % resetTime == 0){
     sum1 = checkSum();
     
   }
-  if(counter == resetTime + 1){
-    if(checkSum() == sum1)
+  if(counter % resetTime == 1){
+    if(checkSum() == sum1){
       reset();
-    counter = 0;
+      counter = 0;
+    }
     sum1 = 0;
-}
+  }//Just in case it still gets stuck
+  //10000 at 75 ms delay between frames is about 20 minutes
+  if(counter == 10000){
+    reset();
+    counter = 0;
+    sum1=0;
+  }
   
   update();
   delay(animationSpeed);
